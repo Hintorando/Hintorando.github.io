@@ -58,19 +58,8 @@
   <script>
     // get url from parameter in url
     const params = new URLSearchParams(window.location.search);
-    const failedUrl = params.get('url');
-
-    if (failedUrl) {
-      // clean url
-      try {
-        const urlObj = new URL(failedUrl);
-        document.getElementById('missing-path').textContent = urlObj.pathname + urlObj.search;
-      } catch(e) {
-        document.getElementById('missing-path').textContent = failedUrl;
-      }
-    } else {
-      document.getElementById('missing-path').textContent = "unknown location";
-    }
+    const failedUrl = window.FAILED_URL || new URLSearchParams(window.location.search).get('url');
+document.getElementById('missing-path').textContent = failedUrl || "unknown";
   </script>
 </body>
 </html>
