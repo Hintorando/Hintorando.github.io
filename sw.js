@@ -20,3 +20,13 @@ self.addEventListener('fetch', (event) => {
       })
   );
 });
+self.addEventListener('install', (event) => {
+  event.waitUntil(
+    caches.open('static-v1').then((cache) => {
+      return cache.addAll([
+        '/404.html',
+        '/index.html',
+      ]);
+    })
+  );
+});
