@@ -1,13 +1,22 @@
-// sw.js
 self.addEventListener('fetch', (event) => {
   event.respondWith(
     fetch(event.request)
       .then((response) => {
-        // if it is 404, send them to 404.html
+        // if 404
         if (response.status === 404) {
-          return caches.match('/404.html?url='+event.request.url) || new Response('Status 404: Page not found');
+          // redirect url with the url
+          const errorUrl = `/404.html?url=${encodeURIComponent(event.request.url)}`;
+          
+          // get the 404 url
+          return caches.match('/404.html', { ignoreSearch: true }).then(cachedResponse => {
+             return cachedResponse || fetch(errorUrl); 
+          });
         }
         return response;
+      })
+      .catch(() => {
+        // eh dont care bout this
+        return caches.match('/404.html', { ignoreSearch: true });
       })
   );
 });
