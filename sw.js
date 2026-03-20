@@ -8,6 +8,7 @@ self.addEventListener('fetch', (event) => {
           const errorUrl = `/404.html?url=${encodeURIComponent(event.request.url)}`;
           
           // get the 404 url
+          console.log("error at"+event.request.url)
           return caches.match('/404.html', { ignoreSearch: true }).then(cachedResponse => {
              return cachedResponse || fetch(errorUrl); 
           });
