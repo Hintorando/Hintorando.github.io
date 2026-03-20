@@ -1,29 +1,26 @@
 self.addEventListener('fetch', (event) => {
   event.respondWith(
     fetch(event.request)
-      .then((response) => {
-        // if 404
+      .then(async (response) => {
         if (response.status === 404) {
-          // redirect url with the url
-          const errorUrl = `/404.html?url=${encodeURIComponent(event.request.url)}`;
-          
-          // get the 404 url
-          console.log("error at"+event.request.url)
-          return caches.match('/404.html', { ignoreSearch: true }).then(cachedResponse => {
-             return cachedResponse || fetch(errorUrl); 
-          });
+          const cached404 = await caches.match('/404.html', { ignoreSearch: true });
+          if (cached404) {
+            // Get the text of the 404 page
+            let html = await cached404.text();
+            // Inject the failed URL into a global variable before returning
+            const injection = `<script>window.FAILED_URL = "${event.request.url}";<\/script>`;
+            html = html.replace('<head>', '<head>' + injection);
+            
+            return new Response(html, { headers: { 'Content-Type': 'text/html' } });
+          }
         }
         return response;
-      })
-      .catch(() => {
-        // eh dont care bout this
-        return caches.match('/404.html', { ignoreSearch: true });
       })
   );
 });
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open('static-v1').then((cache) => {
+    caches.open('static-v2').then((cache) => {
       return cache.addAll([
         '/404.html',
         '/index.html',
