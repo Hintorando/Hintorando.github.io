@@ -1,3 +1,4 @@
+const cache_version = 3
 self.addEventListener('fetch', (event) => {
   event.respondWith(
     fetch(event.request)
@@ -20,7 +21,7 @@ self.addEventListener('fetch', (event) => {
 });
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open('static-v2').then((cache) => {
+    caches.open('static-v'+cache_version).then((cache) => {
       return cache.addAll([
         '/404.html',
         '/index.html',
