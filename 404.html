@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>404 Not Found</title>
+  <style>
+    body {
+      background-color: #282c34;
+      color: #abb2bf;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      text-align: center;
+    }
+    .error-code {
+      font-size: 8rem;
+      font-weight: bold;
+      color: #e06c75; /* One Dark Red */
+      margin: 0;
+    }
+    .message {
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+    }
+    code {
+      background: #1e2127;
+      padding: 5px 10px;
+      border-radius: 4px;
+      color: #61afef; /* One Dark Blue */
+      word-break: break-all;
+    }
+    .btn {
+      margin-top: 30px;
+      padding: 10px 20px;
+      background-color: #61afef;
+      color: #282c34;
+      text-decoration: none;
+      border-radius: 4px;
+      font-weight: bold;
+    }
+    .btn:hover { background-color: #528bff; }
+  </style>
+</head>
+<body>
+
+  <p class="error-code">404</p>
+  <p class="message">Uh oh! We couldn't find that page.</p>
+  
+  <p>The path <code><span id="missing-path">...</span></code> does not exist.</p>
+
+  <a href="/" class="btn">Return to IDE</a>
+
+  <script>
+    // get url from parameter in url
+    const params = new URLSearchParams(window.location.search);
+    const failedUrl = params.get('url');
+
+    if (failedUrl) {
+      // clean url
+      try {
+        const urlObj = new URL(failedUrl);
+        document.getElementById('missing-path').textContent = urlObj.pathname + urlObj.search;
+      } catch(e) {
+        document.getElementById('missing-path').textContent = failedUrl;
+      }
+    } else {
+      document.getElementById('missing-path').textContent = "unknown location";
+    }
+  </script>
+</body>
+</html>
